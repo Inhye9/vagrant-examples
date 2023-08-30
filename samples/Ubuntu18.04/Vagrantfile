@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+SUBNET="192.168.56"
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.define "g1" do |server|
+    server.vm.hostname = "g1"
+    server.vm.provider :virtualbox do |v|
+      v.name = "g1"
+    end
+    server.vm.network "private_network", ip: "#{SUBNET}.101"
+  end
+  # config.vm.network :private_network, ip: "172.3.4.11"
+  config.vm.synced_folder "~/df/vagrant", "/vagrant" #, type: "nfs", nfs_udp: false
+  config.vm.provision "shell", inline: <<-SHELL
+    apt-get update
+    apt install -y language-pack-ko language-pack-ko-base
+  SHELL
+end
